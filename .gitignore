@@ -1,9 +1,0 @@
-.vscode
-.idea
-*.iml
-out
-gen
-node_modules
-package-lock.json
-unit
-gulp
