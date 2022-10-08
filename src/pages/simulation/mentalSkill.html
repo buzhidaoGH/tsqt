@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+  <title>心法和经脉</title>
+  <!-- 心法->经脉->技能经验 -->
+  <style type="text/css">
+    #mental_skill {
+      background-color: #8ABF1F;
+      box-shadow: 0 0 10px #EDC263;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    #meridian {
+      background-color: #FFC15A;
+      box-shadow: 0 0 10px #A9FF45;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    #skills_exp {
+      background-color: #CEB89C;
+      box-shadow: 0 0 10px #F4AD00;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="layui-row">
+    <!-- 心法模拟 -->
+    <div class="layui-col-xs12" id="mental_skill">
+      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>心法模拟</legend>
+      </fieldset>
+      <form class="layui-form">
+        <!-- 心法模拟数据 -->
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">心法等级</label>
+            <div class="layui-input-inline" style="width: 80px">
+              <input type="text" id="mentalLevelMin" name="mental_level_min"
+                     lay-verify="required|number|mentalVerify" placeholder="初始心法" autocomplete="off"
+                     class="layui-input" value="1" style="padding: 0;text-align: center">
+            </div>
+            <div class="layui-form-mid">到</div>
+            <!-- 提交按钮 -->
+            <div class="layui-input-inline" style="width: 80px">
+              <input type="text" id="mentalLevelMax" name="mental_level_max"
+                     lay-verify="required|number|mentalVerify" placeholder="目标心法" autocomplete="off"
+                     class="layui-input" style="padding: 0;text-align: center">
+            </div>
+            <div class="layui-input-inline">
+              <button type="submit" class="layui-btn" lay-submit lay-filter="mentalSkill">心法模拟</button>
+              <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+          </div>
+        </div>
+        <!-- 心法模拟结果 -->
+        <div class="layui-form-item" id="mental_skill_mock">
+          <div class="layui-input-block">
+            <span style="color: #888888">PS:模拟结果可能会有一丝差别</span>
+          </div>
+          <label class="layui-form-label">模拟结果</label>
+          <!-- 渲染结果表 -->
+        </div>
+      </form>
+    </div>
+
+    <!-- 经脉模拟 -->
+    <div class="layui-col-xs12" id="meridian">
+      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>经脉模拟</legend>
+      </fieldset>
+      <form class="layui-form">
+        <!-- 经脉模拟数据 -->
+        <div class="layui-form-item">
+          <div class="layui-inline">
+            <label class="layui-form-label">经脉层数</label>
+            <div class="layui-input-inline" style="width: 80px">
+              <input type="text" id="meridianLevelMin" name="meridian_level_min"
+                     lay-verify="required|number|meridianVerify" placeholder="初始经脉" autocomplete="off"
+                     class="layui-input" value="0" style="padding: 0;text-align: center">
+            </div>
+            <div class="layui-form-mid">到</div>
+            <div class="layui-input-inline" style="width: 80px">
+              <input type="text" id="meridianLevelMax" name="meridian_level_max"
+                     lay-verify="required|number|meridianVerify" placeholder="目标经脉" autocomplete="off"
+                     class="layui-input" style="padding: 0;text-align: center">
+            </div>
+            <!-- 提交按钮 -->
+            <div class="layui-input-inline">
+              <button type="submit" class="layui-btn" lay-submit lay-filter="meridian">经脉模拟</button>
+              <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+          </div>
+        </div>
+        <!-- 单经脉模拟结果 -->
+        <div class="layui-form-item" id="single_meridian_mock">
+          <label class="layui-form-label">单经消耗</label>
+        </div>
+        <!-- 单经脉提升结果 -->
+        <div class="layui-form-item" id="single_meridian_enhance">
+          <label class="layui-form-label">单经提供</label>
+        </div>
+      </form>
+    </div>
+
+    <!-- 基础技能经验获取 -->
+    <div class="layui-col-xs12" id="skills_exp">
+      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>基础技能经验</legend>
+      </fieldset>
+      <form class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+          <label class="layui-form-label">人物等级</label>
+          <div class="layui-input-inline" style="width: 80px">
+            <input type="text" name="characterLevel" lay-verify="required|number|levelVerify"
+                   placeholder="等级范围80~179" autocomplete="off" class="layui-input" value="100"
+                   style="padding: 0;text-align: center">
+          </div>
+          <div class="layui-input-inline" style="width: 105px">
+            <input type="checkbox" name="platinumElite" lay-skin="switch" lay-text="白金会员|普通用户">
+          </div>
+          <!-- 提交按钮 -->
+          <div class="layui-input-inline">
+            <button type="submit" class="layui-btn" lay-submit lay-filter="skillsExp">基础技经</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">心魔提供</label>
+          <div class="layui-input-inline" style="width: 80px">
+            <input type="text" id="xingMo" readonly class="layui-input" value="无">
+          </div>
+          <div class="layui-input-inline" style="width: 80px">
+            <input type="text" id="yaowang" readonly class="layui-input" value="无">
+          </div>
+          <label class="layui-form-label">除暴一轮</label>
+          <div class="layui-input-inline" style="width: 80px">
+            <input type="text" id="chuBao" readonly class="layui-input" value="无">
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <script src="./assets/tool.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      let mentalSkillMockList = ["单技经消耗", "单修为提供", "八技经消耗", "八修为提供", "回合数提供", "单修为提升"]
+      for (let i = 0; i < mentalSkillMockList.length; i++) {
+        $("#mental_skill_mock").append(`
+        <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+            <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">${ mentalSkillMockList[i] }</label>
+            <input type="text" id="mental${ i + 1 }" readonly class="layui-input" value="无" style="padding: 0">
+          </div>
+        `)
+      }
+
+      let singleMeridianMock = ["单技经消耗", "单经验消耗", "大还丹消耗"]
+      for (let i = 0; i < singleMeridianMock.length; i++) {
+        $("#single_meridian_mock").append(`
+        <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+            <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">${ singleMeridianMock[i] }</label>
+            <input type="text" id="singleMeridian${ i }" readonly class="layui-input" value="无" style="padding: 0">
+          </div>
+        `)
+      }
+
+      let singleMeridianEnhance = ["物防", "HP", "法防", "[法|物]攻", "速度"]
+      for (let i = 0; i < singleMeridianEnhance.length; i++) {
+        $("#single_meridian_enhance").append(`
+        <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+            <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">${ singleMeridianEnhance[i] }</label>
+            <input type="text" id="singleMerCul${ i }" readonly class="layui-input" value="无" style="padding: 0">
+          </div>
+        `)
+      }
+    })
+
+    layui.use(['form', 'layer'], function () {
+      let form = layui.form, layer = layui.layer
+          , minMentalLevel = 1, maxMentalLevel = 279 // 心法等级范围
+          , minMeridian = 0, maxMeridian = 60 // 经脉等级范围
+      form.render('checkbox')
+      let $mentalLevelMin = $("#mentalLevelMin") // 心法输入小等级
+      let $mentalLevelMax = $("#mentalLevelMax") // 心法输入高等级
+      let $meridianLevelMin = $("#meridianLevelMin") // 经脉输入小等级
+      let $meridianLevelMax = $("#meridianLevelMax") // 经脉输入高等级
+      // 自定义规则
+      // 自定义表单规则
+      form.verify({
+        // 心法规则
+        mentalVerify: function (value, item) {
+          if (value > maxMentalLevel || value < minMentalLevel) {
+            return "心法等级在1~279范围"
+          }
+          if (parseInt($mentalLevelMin.val()) > parseInt($mentalLevelMax.val())) {
+            layer.msg("错误：初始心法 > 目标心法", {icon: 2})
+            return true
+          }
+          return false
+        },
+        // 经脉规则
+        meridianVerify: function (value, item) {
+          if (value > maxMeridian || value < minMeridian) {
+            return "经脉层数在0~60范围"
+          }
+          if (parseInt($meridianLevelMin.val()) > parseInt($meridianLevelMax.val())) {
+            layer.msg("错误：初始经脉 > 目标经脉", {icon: 2})
+            return true
+          }
+          return false
+        },
+        // 等级规则
+        levelVerify: function (value, item) {
+          if (value >= 80 && value <= 179) {
+            return false
+          }
+          return "限制等级为80~179"
+        }
+      })
+
+      // 模拟心法计算
+      form.on("submit(mentalSkill)", function ({field: {mental_level_max, mental_level_min}}) {
+        const cultivationImp = cultivationCal(mental_level_max)
+        const cultivationStart = cultivationCal(mental_level_min)
+        $('#mental2').val(cultivationImp.singleCultivation)
+        $('#mental4').val(cultivationImp.wholeCultivation)
+        $('#mental5').val(parseInt(cultivationImp.wholeCultivation / 12000 + ''))
+        $('#mental6').val(cultivationImp.singleCultivation - cultivationStart.singleCultivation)
+        const expConsumption = mentalExpConsumption(mental_level_min, mental_level_max)
+        $('#mental1').val(expConsumption.singleExpConsumption)
+        $('#mental3').val(expConsumption.wholeExpConsumption)
+        return false
+      })
+
+      // 模拟经脉提升与面板增强
+      form.on("submit(meridian)", function ({field: {meridian_level_max, meridian_level_min}}) {
+        // 经脉提升消耗
+        const meridianConMap = meridianConsumption(meridian_level_min, meridian_level_max)
+        $('#singleMeridian0').val(meridianConMap.tempJJ + '（万）')
+        $('#singleMeridian1').val(meridianConMap.tempExp + '（亿）')
+        $('#singleMeridian2').val(meridianConMap.tempMed + '（个）')
+        const meridianMap = meridianEnhance(meridian_level_max)
+        $('#singleMerCul0').val(meridianMap.def)
+        $('#singleMerCul1').val(meridianMap.hp)
+        $('#singleMerCul2').val(meridianMap.res)
+        $('#singleMerCul3').val(meridianMap.att)
+        $('#singleMerCul4').val(meridianMap.spd)
+        return false
+      })
+
+      // 基础技能经验获取模拟
+      form.on("submit(skillsExp)", function ({field: {characterLevel, platinumElite}}) {
+        characterLevel = parseInt(characterLevel)
+        const tempJJ = {xm: 0, cb: 0, yw: 0}
+        if (characterLevel >= 80 && characterLevel < 90) {
+          tempJJ.cb = 1300
+          tempJJ.xm = 890
+        } else if (characterLevel >= 90 && characterLevel < 100) {
+          tempJJ.cb = 1400
+          tempJJ.xm = 1730
+        } else if (characterLevel >= 100 && characterLevel < 110) {
+          tempJJ.cb = 1500
+          tempJJ.xm = 1780
+        } else if (characterLevel >= 110 && characterLevel <= 120) {
+          tempJJ.cb = 1500
+          tempJJ.xm = 1830
+        } else if (characterLevel > 120 && characterLevel < 130) {
+          tempJJ.cb = 1500
+          tempJJ.xm = 1880
+        } else if (characterLevel >= 130 && characterLevel <= 140) {
+          tempJJ.cb = 1560
+          tempJJ.xm = 1880
+        } else if (characterLevel > 140 && characterLevel < 150) {
+          tempJJ.cb = 1560
+          tempJJ.xm = 1930
+        } else if (characterLevel >= 150 && characterLevel < 160) {
+          tempJJ.cb = 1560
+          tempJJ.xm = 12000
+          tempJJ.yw = 3
+        } else if (characterLevel >= 160 && characterLevel < 180) {
+          tempJJ.cb = 1560
+          tempJJ.xm = 12000
+          tempJJ.yw = 6
+        }
+        if (platinumElite === 'on') {
+          tempJJ.cb = tempJJ.cb * 1.2
+        }
+        $('#chuBao').val(tempJJ.cb)
+        $('#xingMo').val(tempJJ.xm)
+        $('#yaowang').val(tempJJ.yw === 0 ? "无" : tempJJ.yw + "妖王")
+        return false
+      })
+    })
+
+    // 心法等级需要的技能经验消耗
+    function mentalExpConsumption(start_level, end_level) {
+      function handle(level) {
+        level = parseInt(level)
+        let temp = 25 * level ** 2 + 25 * level - 50
+        level >= 110 ? temp = 305200 + level * (level + 1) * (2 * level - 279) / 2 + 360195 : ''
+        return temp
+      }
+
+      let handleExpConsumption = handle(end_level) - handle(start_level)
+      return {
+        singleExpConsumption: handleExpConsumption,
+        wholeExpConsumption: handleExpConsumption * 8
+      }
+    }
+
+    // 心法等级提供的修为
+    function cultivationCal(mentalLevel) {
+      mentalLevel = parseInt(mentalLevel)
+      let cultivation = 0.6883947 * mentalLevel +
+          0.0136147 * mentalLevel ** 2 +
+          0.4655015 * mentalLevel ** 2.1012641
+      // cultivation = 0.7*mentalLevel+0.47752*mentalLevel**2.09964
+      return {
+        singleCultivation: Math.round(cultivation),
+        wholeCultivation: Math.round(cultivation * 8)
+      }
+    }
+
+    // 经脉提升所需的消耗
+    function meridianConsumption(start_level, end_level) {
+      function handle(level) {
+        level = parseInt(level)
+        let tempJJ = (0.1 + 0.1 * level) * level / 2
+        let tempExp = (0.08 + 0.08 * level) * level / 2
+        let tempMed = 0
+        if (level === 10) {
+          tempMed = 1
+        }
+        if (level > 10) {
+          tempMed = 1
+          level === 20 ? tempMed = 3 : ''
+          let levelTemp = level - 10
+          tempJJ = 5.5 + (2.2 + 0.2 * levelTemp) * levelTemp / 2
+          tempExp = 4.4 + (1.76 + 0.16 * levelTemp) * levelTemp / 2
+        }
+        if (level > 20) {
+          tempMed = 3
+          level === 30 ? tempMed = 6 : ''
+          let levelTemp = level - 20
+          tempJJ = 26.5 + (6.3 + 0.3 * levelTemp) * levelTemp / 2
+          tempExp = 21.2 + (5.04 + 0.24 * levelTemp) * levelTemp / 2
+        }
+        if (level > 30) {
+          tempMed = 6
+          level === 40 ? tempMed = 10 : ''
+          let levelTemp = level - 30
+          tempJJ = 73 + (12.5 + 0.5 * levelTemp) * levelTemp / 2
+          tempExp = 58.4 + (10 + 0.4 * levelTemp) * levelTemp / 2
+        }
+        if (level > 40) {
+          tempMed = 10
+          level === 50 ? tempMed = 15 : ''
+          let levelTemp = level - 40
+          tempJJ = 160.5 + (23 + levelTemp) * levelTemp / 2
+          tempExp = 128.4 + (18.4 + 0.8 * levelTemp) * levelTemp / 2
+        }
+        if (level > 50) {
+          tempMed = 15
+          level === 60 ? tempMed = 21 : ''
+          let levelTemp = level - 50
+          tempJJ = 325.5 + (22 + levelTemp) * levelTemp
+          tempExp = 260.4 + (17.6 + 0.8 * levelTemp) * levelTemp
+        }
+        return {
+          tempJJ, tempExp, tempMed
+        }
+      }
+
+      let startMeridian = handle(start_level)
+      let endMeridian = handle(end_level)
+      return {
+        tempJJ: (endMeridian.tempJJ - startMeridian.tempJJ).toFixed(1),
+        tempExp: (endMeridian.tempExp - startMeridian.tempExp).toFixed(1),
+        tempMed: endMeridian.tempMed - startMeridian.tempMed
+      }
+    }
+
+    // 经脉提升的面板加成
+    function meridianEnhance(meridianLevel) {
+      meridianLevel = parseInt(meridianLevel)
+      let enhanceMap = {def: 0, hp: 0, res: 0, att: 0, spd: 0}
+      if (meridianLevel > 0 && meridianLevel <= 10) {
+        enhanceMap.def = meridianLevel * 50
+      }
+      if (meridianLevel > 10 && meridianLevel <= 20) {
+        let tempLevel = meridianLevel - 10
+        enhanceMap.def = 500
+        enhanceMap.hp = 100 * tempLevel
+      }
+      if (meridianLevel > 20 && meridianLevel <= 30) {
+        let tempLevel = meridianLevel - 20
+        enhanceMap.def = 500
+        enhanceMap.hp = 1000
+        enhanceMap.res = tempLevel * 50
+      }
+      if (meridianLevel > 30 && meridianLevel <= 40) {
+        let tempLevel = meridianLevel - 30
+        enhanceMap.def = 500
+        enhanceMap.res = 500
+        enhanceMap.hp = 1000 + 100 * tempLevel
+      }
+      if (meridianLevel > 40 && meridianLevel <= 50) {
+        let tempLevel = meridianLevel - 40
+        enhanceMap.def = 500
+        enhanceMap.res = 500
+        enhanceMap.hp = 2000
+        enhanceMap.att = 50 * tempLevel
+      }
+      if (meridianLevel > 50 && meridianLevel <= 60) {
+        let tempLevel = meridianLevel - 50
+        enhanceMap.def = 500
+        enhanceMap.res = 500
+        enhanceMap.hp = 2000
+        enhanceMap.att = 500
+        enhanceMap.spd = 50 * tempLevel
+      }
+      return enhanceMap
+    }
+
+  </script>
+</body>
+</html>

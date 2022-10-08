@@ -1,0 +1,12 @@
+// 骗子名单
+[
+  {
+    "name": "名称",
+    "qq": "QQ号",
+    "serve": "所在服务器",
+    "game_name": "游戏名称",
+    "game_id": "游戏id",
+    "description": "诈骗描述或者类型",
+    "corroboration": "佐证/链接"
+  }
+]

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+  <title>装备&套装</title>
+  <style type="text/css">
+    #equipmentImprove {
+      background-color: #32D9FC;
+      box-shadow: 0 0 10px #4F42CC;
+      border-radius: 5px;
+    }
+
+    #equipmentSet {
+      background-color: #FAFAC8;
+      box-shadow: 0 0 10px #4F42CC;
+      border-radius: 5px;
+      margin-top: 35px;
+    }
+
+    .layui-table th {
+      /*表头内容居中显示*/
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="layui-row">
+    <!-- 装备提升模拟 -->
+    <div class="layui-col-xs12" id="equipmentImprove">
+      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>装备提升模拟</legend>
+      </fieldset>
+      <div style="text-align: center;">
+        <div class="layui-inline">
+          <form class="layui-form">
+            <!-- 现在装备信息 -->
+            <div class="layui-form-item">
+              <label class="layui-form-label">装备信息</label>
+              <div class="layui-input-inline" style="text-align: center">
+                <input name="now_info" placeholder="装备数值" lay-verify="required|number" class="layui-input">
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="now_star" name="now_star"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="now_inscribed" name="now_inscribed"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="now_quality" name="now_quality"></select>
+              </div>
+            </div>
+            <!-- 装备模拟提升选项 -->
+            <div class="layui-form-item">
+              <label class="layui-form-label">模拟选项</label>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="new_star" name="new_star"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="new_inscribed" name="new_inscribed"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="new_enchantments" name="new_enchantments"></select>
+              </div>
+            </div>
+            <!-- 装备模拟结果 -->
+            <div class="layui-form-item">
+              <label class="layui-form-label">模拟结果</label>
+              <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+                <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">数值预测</label>
+                <input type="text" id="new-info1" readonly class="layui-input" value="无" style="padding: 0">
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+                <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">附魔预测</label>
+                <input type="text" id="new-info2" readonly class="layui-input" value="无" style="padding: 0">
+              </div>
+            </div>
+            <!-- 提交按钮 -->
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="formImprove">装备模拟</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <span style="color: #888888">&emsp;&emsp;PS:模拟结果可能会有些许出入;部分装备不符合此模拟规律</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+    <!-- 套装快速模拟 -->
+    <div class="layui-col-xs12" id="equipmentSet">
+      <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>套装快速模拟</legend>
+      </fieldset>
+      <div style="text-align: center;">
+        <div class="layui-inline">
+          <form class="layui-form">
+            <!-- 现在装备信息 -->
+            <div class="layui-form-item">
+              <label class="layui-form-label">套装信息</label>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="set_level" lay-filter="set_level" name="set_level"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="set_type" name="set_type"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select>
+                  <option value="0">装备品质</option>
+                  <option value="1" selected>光芒</option>
+                </select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="set_star" name="set_star"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="set_inscribed" name="set_inscribed"></select>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">&emsp;</label>
+              <div class="layui-input-inline" style="text-align-last:center;width: 105px;text-align: center">
+                <select id="set_enchantments" name="set_enchantments"></select>
+              </div>
+              <div class="layui-input-inline" style="text-align-last:center;width: 145px;text-align: center">
+                <select id="set_enchantments_quantity" name="set_enchantments_quantity">
+                  <option value="-1">附魔数量</option>
+                  <option value="5">5法附魔</option>
+                  <option value="4">4法附魔</option>
+                  <option value="3">3法附魔</option>
+                  <option value="2">2法附魔</option>
+                  <option value="1">1法附魔</option>
+                  <option value="0">0法附魔</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 模拟按钮 -->
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit lay-filter="formSet">套装模拟</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <span style="color: #888888">&emsp;&emsp;PS:模拟结果可能会有些许出入;部分装备不符合此模拟规律</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 套装模拟弹窗模板 -->
+  <div id="content_set_table" hidden>
+    <table class="layui-table" style="text-align: center" lay-size="lg">
+      <thead>
+      <tr>
+        <th></th>
+        <th>衣服</th>
+        <th>头饰</th>
+        <th>裤子</th>
+        <th>腰带</th>
+        <th>鞋子</th>
+        <th>护肩</th>
+        <th>披风</th>
+        <th>饰品</th>
+        <th>合计</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- 原始套装 -->
+      <tr id="set_table_primitive">
+        <td>原始套装</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+      </tr>
+      <!-- 强化后套装 -->
+      <tr id="set_table_improve">
+        <td>强化套装</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+      </tr>
+      <!-- 改造材料-->
+      <tr id="set_table_retrofit">
+        <td>改造材料</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+        <td>无</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <script src="./assets/tool.js"></script>
+  <script type="text/javascript">
+    layui.use(['form', 'layer'], function () {
+      let form = layui.form, layer = layui.layer,
+          equipment, equipmentSet, setLevelList = [], setTypeList = []
+      fetch("./assets/db/equipment").then(res => res.text()).then(data => {
+        equipment = JSON.parse(decrypt(data))
+        equipmentSet = equipment.equipmentSet
+        equipmentSet.equipment.forEach(e => {
+          setLevelList.push(e.level)
+        })
+        selectRender({id: "set_level", dataList: setLevelList})
+        setTypeList = equipmentSet.type
+        selectRender({id: "set_type", dataList: setTypeList})
+      })
+
+      // 监听set_level的修改
+      form.on('select(set_level)', function (data) {
+        if (setLevelList[data.value] >= 140) {
+          selectRender({id: "set_type", dataList: setTypeList.slice(0, 2)})
+        } else {
+          selectRender({id: "set_type", dataList: setTypeList})
+        }
+        form.render("select")
+      })
+
+      fetch("./assets/db/base.json").then(res => res.json()).then(data => {
+        selectRender({id: "now_star", dataList: data.starList})
+        selectRender({id: "new_star", dataList: data.starList})
+        selectRender({id: "set_star", dataList: data.starList})
+        selectRender({id: "now_inscribed", dataList: data.inscribedList})
+        selectRender({id: "new_inscribed", dataList: data.inscribedList})
+        selectRender({id: "set_inscribed", dataList: data.inscribedList})
+        selectRender({id: "new_enchantments", dataList: data.enchantmentsList})
+        selectRender({id: "set_enchantments", dataList: data.enchantmentsList})
+        selectRender({id: "now_quality", dataList: data.qualityList})
+        form.render("select")
+      })
+
+      // 装备模拟
+      form.on("submit(formImprove)", function (data) {
+        let table = data.field
+        let new_info = handleVal(table.now_info, table.now_star, table.new_star, equipment.star)
+        new_info = handleVal(new_info, table.now_inscribed, table.new_inscribed, equipment.inscribed)
+        if (table.new_enchantments !== "0" && table.now_quality !== "0") { // 有附魔
+          let new_info2 = equipment.quality[table.now_quality - 1] * equipment.enchantments[table.new_enchantments - 1]
+              * equipment.star[table.new_star] * equipment.inscribed[table.new_inscribed]
+          $("#new-info2").val(Math.round(new_info2))
+        } else if (table.new_enchantments === "0" && table.now_quality === "0") { //无附魔
+          $("#new-info2").val("无")
+        } else {
+          layer.msg("品质与附魔需同时操作", {icon: 2})
+          return false
+        }
+        $("#new-info1").val(Math.round(new_info))
+        return false
+      })
+
+      // 套装模拟
+      form.on("submit(formSet)", function (data) {
+        let table = data.field
+        let equipmentItem = equipmentSet.equipment[parseInt(table.set_level)]
+        let enchantments_defense = {
+          spell_defense: 0,
+          physical_defense: 0,
+          base_spell_defense: 0,
+          base_physical_defense: 0
+        }
+        if (table.set_enchantments_quantity !== "-1") {
+          if (table.set_enchantments === "0") {
+            layer.msg("不能单独选附魔类型!需要再选择附魔等级", {icon: 2})
+            return false
+          }
+          let baseEnchantmentsVal = equipment.quality[3] * equipment.enchantments[table.set_enchantments - 1]
+          let enchantmentsVal = baseEnchantmentsVal * equipment.star[table.set_star] * equipment.inscribed[table.set_inscribed]
+          enchantments_defense.spell_defense = Math.round(
+              enchantmentsVal * table.set_enchantments_quantity)
+          enchantments_defense.physical_defense = Math.round(
+              enchantmentsVal * (5 - table.set_enchantments_quantity))
+          enchantments_defense.base_spell_defense = Math.round(
+              baseEnchantmentsVal * table.set_enchantments_quantity)
+          enchantments_defense.base_physical_defense = Math.round(
+              baseEnchantmentsVal * (5 - table.set_enchantments_quantity))
+        }
+        // 原始套装结果数组
+        let set_primitive = []
+        for (let i = 0; i < 8; i++) {
+          if (i < 1) {
+            set_primitive.push(equipmentItem.clothe.defense[table.set_type])
+          }
+          if (i >= 1 && i < 3) {
+            set_primitive.push(equipmentItem.head.defense[table.set_type])
+          }
+          if (i >= 3 && i < 5) {
+            set_primitive.push(equipmentItem.sash.defense[table.set_type])
+          }
+          if (i === 5) {
+            set_primitive.push(equipmentItem.shoulder.defense[table.set_type])
+          }
+          if (i === 6) {
+            set_primitive.push(equipmentItem.cloak.defense[table.set_type])
+          }
+          if (i === 7) {
+            set_primitive.push("无")
+          }
+        }
+        // 强化套装原始数组
+        let set_improve = listZoom(set_primitive,
+            equipment.star[table.set_star] * equipment.inscribed[table.set_inscribed]
+        )
+        if (table.set_type === "0") {
+          enchantments_defense.base_spell_defense += listSum(set_primitive)
+          enchantments_defense.base_physical_defense += listSum(set_primitive)
+          enchantments_defense.spell_defense += listSum(set_improve)
+          enchantments_defense.physical_defense += listSum(set_improve)
+        }
+        if (table.set_type === "1") {
+          enchantments_defense.base_spell_defense += listSum(set_primitive)
+          enchantments_defense.spell_defense += listSum(set_improve)
+        }
+        if (table.set_type === "2") {
+          enchantments_defense.base_physical_defense += listSum(set_primitive)
+          enchantments_defense.physical_defense += listSum(set_improve)
+        }
+        // 改造材料
+        let retrofitListMap = getRetrofit(equipmentItem)
+        let primitiveList = $("#set_table_primitive td")
+        let improveList = $("#set_table_improve td")
+        let retrofitList = $("#set_table_retrofit td")
+        for (let i = 1; i < primitiveList.length; i++) {
+          primitiveList[i].innerHTML = set_primitive[i - 1]
+          improveList[i].innerHTML = set_improve[i - 1]
+          retrofitList[i].innerHTML = retrofitListMap[i - 1]
+          if (i === 9) {
+            primitiveList[i].innerHTML = `法防:${ enchantments_defense.base_spell_defense }<br/>
+                                      物防:${ enchantments_defense.base_physical_defense }`
+            improveList[i].innerHTML = `法防:${ enchantments_defense.spell_defense }<br/>
+                                            物防:${ enchantments_defense.physical_defense }`
+          }
+        }
+
+        layer.open({
+          type: 0,
+          title: `<div style="margin: 0 auto;width: fit-content;
+font-weight: bold;font-size: 17px">${ equipmentItem.level + equipmentSet.type[table.set_type] }套装模拟结果
+<span style="font-weight: normal;font-size: 16px;color: #1e9fff">&emsp;${ table.set_star }星${ table.set_inscribed }铭刻${ table.set_enchantments }级附魔[${ table.set_enchantments_quantity }法${ 5 - table.set_enchantments_quantity === 5 ? 0 : 5 - table.set_enchantments_quantity }物]</span></div>`,
+          content: $("#content_set_table").html()
+        })
+        return false
+      })
+      // 套装打造|改造估算模拟
+      form.on("submit(formSetPrice)", function (data) {
+
+      })
+    })
+
+    function handleVal(value, now_info, new_info, list) {
+      return (value / list[now_info]) * list[new_info]
+    }
+  </script>
+</body>
+</html>

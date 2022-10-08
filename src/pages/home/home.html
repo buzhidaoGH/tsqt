@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+  <title>首页</title>
+  <style type="text/css">
+    #tsqt-main {
+      padding: 0 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="layui-row">
+    <div class="layui-col-xs12" id="tsqt-back"
+         style="font-size: 16px;background-color: #CAB588;border-radius: 10px;padding: 10px">
+      <span style="font-size: 18px;width:fit-content;
+          font-weight: bold;display: block;margin: 0 auto">天书-背景</span>
+      <span style="font-size: 16px;text-align: right;
+          display: block;">—— 转载自天书</span>
+    </div>
+  </div>
+  <div id="tsqt-active" style="display: flex;justify-content: space-between;
+  margin-top: 15px;font-size: 18px"></div>
+  <script src="./assets/tool.js"></script>
+  <script type="text/javascript">
+    $(function () {
+      let content = "仙人左丘和于伯牙游历河山之时，不经意间巧得了一本无字天书。此天书既博古通今，又可预示未来，更能通人言语，解人疑题。两位仙人以为新奇，百问天书，无不能答。且天书以此为傲，使此二人颇有不爽，遂欲设计于它。\n" +
+          "\n" +
+          "左丘曰：“伯牙兄，你我游历这河山百余年，所见这人间品性不下百种，好坏优劣极难分辨。这诸多品性之中，你我所应该看重的有哪些呢？”\n" +
+          "\n" +
+          "于伯牙说：“仙友，这人间品行，有人说忠孝仁义最大”\n" +
+          "\n" +
+          "左丘曰：“此言不虚，但忠孝仁义乃凡人德行，你我仙人又忠于谁？孝于谁？仁义于谁呀？”\n" +
+          "\n" +
+          " 于伯牙说：“那仙友认为，我们该存有什么品行呢？”\n" +
+          "\n" +
+          "左丘曰：“我看这草莽间的侠义，勇气到是满有意思的。”\n" +
+          "\n" +
+          "于伯牙说：“依我看来，这飘逸慈悲也是应该有的。”\n" +
+          "\n" +
+          "左丘曰：“这样说来，这侠义，勇气，飘逸，慈悲都是你我觉得有趣的品格，可这些品格之中，哪种能改变这世界更多一些呢？”\n" +
+          "\n" +
+          "于伯牙说：“仙友今日出此疑问，怕是又要劳烦这天书解答了。”\n" +
+          "\n" +
+          "左丘大笑曰：“此天书无所不晓，这等小题又怎么会劳烦于它呢。不如你我再去游历，独留它在此思索，待它想通之时，我们自然有缘再见。”\n" +
+          "\n" +
+          "说罢，此二人遂乘云而去。只遗天书于此。\n" +
+          "\n" +
+          "想这天书，乃万物之灵，又通古今，知未来，却偏偏没法回答两位仙人的问题，这四种品格，本无高低轻重，而这两位仙人却定要将它们分个高下，天书自是不肯服输，遂欲于己内建一世界，以观之。\n" +
+          "\n" +
+          "第一日，天书建山川岛屿，河流湖泊，于是天书界内从无至有，出现了盛纳生物的地方。\n" +
+          "\n" +
+          "第二日，天书建屋房城寨，于是天书界内从简至繁，有了人类居住的地方。\n" +
+          "\n" +
+          "第三日，天书将形形种种的寻常百姓，放入界内，给他们君臣概念，世俗礼仪，善恶之道。\n" +
+          "\n" +
+          "第四日，天书将百余种野兽，数十种灵异，细小物件，放入界内，教百姓驯化野兽，使用物件的方法。\n" +
+          "\n" +
+          "第五日，天书以侠义，勇气，飘逸，慈悲四种品性幻化出四种技法，选择界内合适之人，教授之。\n" +
+          "\n" +
+          "第六日，天书让界内有思想之人，忘却天书创世的记忆，让他们所思所想同界外之人一样，或相互纷争，排除异类，或求同存异，扶持共生。\n" +
+          "\n" +
+          "第七日，天书看一切皆好，便轻轻睡去，等待这天书界内自己产生个结果。"
+      const strings = content.split("\n")
+      const tsqtBack = $("#tsqt-back")
+      for (let string of strings) {
+        let temp = $("<p style='text-indent:2em'>" + string + "</p>")
+        tsqtBack.append(temp)
+      }
+      tsqtBack.append(
+          $("<a style='float: right' href='http://www.tianshu.cn/html/22/627/628/5076.htm' target='_blank'>后续内容</a>"))
+      renderActive()
+    })
+
+    // 渲染活动
+    function renderActive() {
+      const active = $("#tsqt-active")
+      fetch("./assets/db/activities.json")
+      .then(res => res.json())
+      .then(data => {
+        for (let item of data.activities) {
+          let itemD =
+              $(`<div
+                    style="border-radius: 10px;width:22%;overflow: hidden;
+                    height: 80px;background: url('${ item.background }') no-repeat center;
+                    background-size: cover;display: flex;align-items: center;justify-content: center">
+                      <a href="${ item.url }" target="_blank" style="color: ${ getRandomColor() };">
+                      ${ item.name }
+                      </a>
+                  </div>`)
+          active.append(itemD)
+        }
+      })
+    }
+  </script>
+
+</body>
+</html>

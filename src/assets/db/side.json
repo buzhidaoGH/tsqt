@@ -1,0 +1,25 @@
+[
+  {
+    "id": 1,
+    "menuTitle": "首&emsp;&emsp;页",
+    "menuUrl": "地址",
+    "childrenList": []
+  },
+  {
+    "id": 2,
+    "menuTitle": "功能模拟",
+    "menuUrl": "",
+    "childrenList": [
+      {
+        "id": 2001,
+        "menuTitle": "选项1",
+        "menuUrl": "javascript:;"
+      },
+      {
+        "id": 2002,
+        "menuTitle": "选项2",
+        "menuUrl": "javascript:;"
+      }
+    ]
+  }
+]

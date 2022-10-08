@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+  <meta charset="UTF-8">
+  <title>武功和转职</title>
+  <style type="text/css">
+    #martial {
+      background-color: #8B97E9;
+      box-shadow: 0 0 10px #D0273E;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+
+    #transfer {
+      background-color: #CD99FF;
+      box-shadow: 0 0 10px #FF99CD;
+      border-radius: 5px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 武功 martial 模拟 -->
+  <div class="layui-col-xs12" id="martial">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+      <legend>武功模拟</legend>
+    </fieldset>
+    <form class="layui-form">
+      <!-- 武功选择参数 -->
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">武功类别</label>
+          <div class="layui-input-inline" style="width: 80px;text-align: center">
+            <select name="martial" lay-verify="required" id="martialSelect"></select>
+          </div>
+
+          <label class="layui-form-label">初始级星</label>
+          <div class="layui-input-inline" style="width: 80px;text-align: center">
+            <select name="startMartialLevel" lay-verify="required" lay-filter="startMartialLevel"
+                    id="startMartialLevel"></select>
+          </div>
+          <div class="layui-input-inline" style="width: 80px;text-align: center">
+            <select name="startMartialStar" lay-verify="required" id="startMartialStar"></select>
+          </div>
+
+          <label class="layui-form-label">目标级星</label>
+          <div class="layui-input-inline" style="width: 80px;text-align: center">
+            <select name="endMartialLevel" lay-verify="required" lay-filter="endMartialLevel"
+                    id="endMartialLevel"></select>
+          </div>
+          <div class="layui-input-inline" style="width: 80px;text-align: center">
+            <select name="endMartialStar" lay-verify="required" id="endMartialStar"></select>
+          </div>
+        </div>
+        <!-- 提交按钮 -->
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit lay-filter="martialMock">模拟</button>
+            <button type="reset" class="layui-btn layui-btn-warm">重置</button>
+          </div>
+        </div>
+      </div>
+      <!-- 武功消耗模拟 -->
+      <div class="layui-form-item" id="mental_skill_mock">
+        <label class="layui-form-label">武功消耗</label>
+      </div>
+    </form>
+  </div>
+
+  <!-- 转职 transfer 模拟 -->
+  <div class="layui-col-xs12" id="transfer">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+      <legend>转职模拟</legend>
+    </fieldset>
+    <form class="layui-form">
+      <!-- 转职选择参数 -->
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">转职类别</label>
+          <div class="layui-input-inline" style="width: 80px;text-align: center">
+            <select name="transfer" lay-verify="required" id="transferSelect"></select>
+          </div>
+
+          <label class="layui-form-label">转职等级</label>
+          <div class="layui-input-inline" style="width: 80px">
+            <input type="text" id="startTransferLevel" name="startTransferLevel"
+                   lay-verify="required|number|transferVerify" placeholder="初始等级" autocomplete="off"
+                   class="layui-input" value="0" style="padding: 0;text-align: center">
+          </div>
+          <div class="layui-form-mid">到</div>
+          <div class="layui-input-inline" style="width: 80px">
+            <input type="text" id="endTransferLevel" name="endTransferLevel"
+                   lay-verify="required|number|transferVerify" placeholder="目标等级" autocomplete="off"
+                   class="layui-input" style="padding: 0;text-align: center">
+          </div>
+        </div>
+        <!-- 提交按钮 -->
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit lay-filter="transferMock">转职模拟</button>
+            <button type="reset" class="layui-btn layui-btn-warm" id="transferReset">重置</button>
+            <span style="color: #000000">PS:对结果进行了便捷化处理,舍弃了精度</span>
+          </div>
+        </div>
+      </div>
+      <!-- 转职消耗模拟 -->
+      <div class="layui-form-item" id="transfer_con"></div>
+      <!-- 转职提供模拟 -->
+      <div class="layui-form-item" id="transfer_enh"></div>
+    </form>
+  </div>
+
+  <script type="text/javascript">
+    const $startMartialLevel = $('#startMartialLevel')
+    const $startMartialStar = $('#startMartialStar')
+    const $endMartialLevel = $('#endMartialLevel')
+    const $endMartialStar = $('#endMartialStar')
+    $(function () {
+      // 武功消耗列表渲染
+      const martialDepList = [
+        decryptText('lcVZz1cJbcgMRFo+FeuGVw=='),
+        decryptText('0uMJjT1BY7X9DJyAuxFILg=='), decryptText('4UoZXAbLAzmn/KgdbEJt5w=='),
+        decryptText('ouwHWgVDmFY3PNFy6rz/sQ=='), decryptText('otBBty3zK8Q6PBcG1KnDgw==')
+      ]
+      for (let i = 0; i < martialDepList.length; i++) {
+        $('#mental_skill_mock').append(`
+          <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+            <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">${ martialDepList[i] }</label>
+            <input type="text" id="martialDep${ i }" readonly class="layui-input" value="无" style="padding: 0">
+          </div>
+        `)
+      }
+
+      // 转职消耗列表渲染
+      const transferDepList = ['经验消耗', '技经消耗', '元神消耗']
+      for (let i = 0; i < transferDepList.length; i++) {
+        if (i === 0) {
+          $('#transfer_con').append(`<label class="layui-form-label">转职消耗</label>`)
+        }
+        $('#transfer_con').append(`
+        <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+            <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">${ transferDepList[i] }</label>
+            <input type="text" id="transferCon${ i }" readonly class="layui-input" value="无" style="padding: 0">
+          </div>
+        `)
+      }
+      // 转职提供空列表渲染
+      $('#transfer_enh').append(`
+      <label class="layui-form-label">转职提供</label>
+      <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+        <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">空</label>
+        <input type="text" readonly class="layui-input" value="空" style="padding: 0">
+      </div>
+      `)
+      $('#transferReset').click(function () {
+        $('#transfer_enh').empty()
+        $('#transfer_enh').append(`
+        <label class="layui-form-label">转职提供</label>
+        <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+          <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">空</label>
+          <input type="text" readonly class="layui-input" value="空" style="padding: 0">
+        </div>
+      `)
+      })
+    })
+
+    layui.use(['form', 'layer'], function () {
+      let form = layui.form, layer = layui.layer
+      renderMartialLevel(0, $startMartialLevel, $startMartialStar)
+      renderMartialLevel(0, $endMartialLevel, $endMartialStar)
+
+      // 转职等级规则
+      form.verify({
+        transferVerify: function (value) {
+          let start = parseInt($('#startTransferLevel').val())
+          let end = parseInt($('#endTransferLevel').val())
+          if (start > end) {
+            return "初始等级不能大于目标等级"
+          }
+          if (value < 0 || value > 300) {
+            return "转职等级范围为0~300"
+          }
+        }
+      })
+
+      // 获取 martialList 和 transferList列表
+      fetch('./assets/db/base.json')
+      .then(res => res.json())
+      .then(data => {
+        let martialList = data.martialList
+        let transferList = data.transferList
+        for (let i = 0; i < martialList.length; i++) {
+          $('#martialSelect')
+          .append(`<option value="${ martialList[i].val }">${ martialList[i].text }</option>`)
+        }
+        for (let i = 0; i < transferList.length; i++) {
+          $('#transferSelect').append(`
+            <option value="${ transferList[i].val }">${ transferList[i].text }</option>
+          `)
+        }
+        form.render("select")
+      }).catch(() => {layer.msg("Error出错了!", {icon: 2})})
+
+      // 监听开始的武功等级修改
+      form.on('select(startMartialLevel)', function ({value}) {
+        renderMartialLevel(value, $startMartialLevel, $startMartialStar)
+        form.render("select")
+      })
+      // 监听结束的武功等级修改
+      form.on('select(endMartialLevel)', function ({value}) {
+        renderMartialLevel(value, $endMartialLevel, $endMartialStar)
+        form.render("select")
+      })
+
+      // 武功模拟按钮监听
+      form.on('submit(martialMock)', function ({
+            field: {
+              martial, startMartialLevel, startMartialStar,
+              endMartialLevel, endMartialStar
+            }
+          }) {
+            let startLevelStar = martialStar(startMartialLevel, startMartialStar)
+            let endLevelStar = martialStar(endMartialLevel, endMartialStar)
+            if (startLevelStar > endLevelStar) {
+              layer.msg("需要 初始级星<目标级星", {icon: 2})
+              return false
+            }
+            const result = handleMartial(startLevelStar, endLevelStar, martial)
+            $('#martialDep0').val(result.bonus)
+            $('#martialDep1').val(result.exp)
+            $('#martialDep2').val(result.ele)
+            $('#martialDep3').val(result.ancient)
+            $('#martialDep4').val(result.page)
+            return false
+          }
+      )
+
+      // 转职模拟按钮监听
+      form.on('submit(transferMock)',
+          function ({field: {transfer, startTransferLevel, endTransferLevel}}) {
+            const $transfer_enh = $('#transfer_enh')
+            const trCon = transferCon(startTransferLevel, endTransferLevel)
+            $('#transferCon0').val(trCon.exp)
+            $('#transferCon1').val(trCon.jj)
+            $('#transferCon2').val(trCon.spi)
+            const trEnh = transferEnhance(endTransferLevel, transfer)
+            for (let i = 0; i < trEnh.nameList.length; i++) {
+              if (i === 0) {
+                $transfer_enh.empty()
+                $transfer_enh.append(`<label class="layui-form-label">转职提供</label>`)
+              }
+              $transfer_enh.append(`
+                <div class="layui-input-inline" style="text-align-last:center;width: 112px;text-align: center">
+                      <label class="layui-form-label" style="border: rgba(0,0,0,.85) 1px solid">${ trEnh.nameList[i] }</label>
+                      <input type="text" readonly class="layui-input" value="${ trEnh.valList[i] }" style="padding: 0">
+                    </div>
+                `)
+            }
+            return false
+          }
+      )
+    })
+
+    // 渲染级星数据
+    function renderMartialLevel(selected, $martialLevel, $martialStar) {
+      selected = parseInt(selected)
+      $martialLevel.empty()
+      $martialStar.empty()
+      for (let i = 0; i < 10; i++) {
+        $martialLevel.append(`
+          <option value="${ i }" ${ selected === i ? 'selected' : '' }>${ i + 1 + "级" }</option>
+        `)
+      }
+      if ($martialLevel.val() === '0') {
+        $martialStar.append(`<option value="0"}>0星</option>`)
+      }
+      for (let i = 1; i <= 10; i++) {
+        $martialStar.append(`
+          <option value="${ i }"}>${ i + "星" }</option>
+        `)
+      }
+
+    }
+
+    // 武功级星处理
+    function martialStar(level, star) {
+      star = parseInt(star)
+      level = parseInt(level)
+      return level * 10 + star
+    }
+
+    // 武功结果模拟
+    function handleMartial(startPara, endPara, type) {
+      startPara = parseInt(startPara)
+      endPara = parseInt(endPara)
+      type = parseInt(type)
+
+      function handle(para, type) {
+        const temp = {
+          exp: (0.002 * (para ** 3 + 3 * para ** 2 + 11 * para) / 3),
+          ele: (10 * para ** 2 + 30 * para),
+          bonus: 0
+        }
+        type === 0 ? temp.bonus = para ** 2 + para + 3 : ''
+        type === 1 ? temp.bonus = 5 * para ** 2 + 5 * para : ''
+        type === 2 ? temp.bonus = 2.5 * para ** 2 + 2.5 * para + 5 : ''
+        type === 3 ? temp.bonus = 1.5 * para ** 2 + 1.5 * para + 2 : ''
+        type === 4 ? temp.bonus = 2 * para ** 2 + 2 * para + 6 : ''
+        return temp
+      }
+
+      let result = {
+        exp: (handle(endPara, type).exp - handle(startPara, type).exp).toFixed(3) + '（亿）',
+        ele: (handle(endPara, type).ele - handle(startPara, type).ele).toFixed(1),
+        bonus: handle(endPara, type).bonus,
+        ancient: 0,
+        page: 0
+      }
+      result.ancient = Math.ceil(result.ele / 3250)
+      result.page = Math.ceil(result.ele / 19800)
+      return result
+    }
+
+    // 转职消耗计算
+    function transferCon(startLevel, endLevel) {
+      function handle(level) {
+        level = parseInt(level)
+        return {
+          jj: level * 3.5,
+          spi: level * 35,
+          exp: Math.ceil((307870897.95 + 1547089.953 * level) * level / 2)
+        }
+      }
+
+      const endHandle = handle(endLevel)
+      const startHandle = handle(startLevel)
+      return {
+        jj: (endHandle.jj - startHandle.jj) + '（万）',
+        spi: (endHandle.spi - startHandle.spi) + '（万）',
+        exp: ((endHandle.exp - startHandle.exp) / 10 ** 8).toFixed(3) + '（亿）'
+      }
+    }
+
+    // 转职等级加成(提供)
+    function transferEnhance(level, type) {
+      level = parseInt(level)
+      const enhanceNameList = []
+      const enhanceValList = []
+      if (type === "0") {
+        enhanceNameList.push(...["物|法 攻", decryptText('LOotXVJj51FMgAX8bIUqSg=='), "物|法 命中", "物|法 闪"])
+        enhanceValList.push(...[level * 100, level * 12, level * 12, level * 12])
+      } else if (type === "1") {
+        enhanceNameList.push(...["物|法 防", "物|法 闪", "物|法 减中", decryptText('WcdRsSG7BKgVQ2lBHcsefA==')])
+        enhanceValList.push(...[level * 33, level * 12, level * 12, level * 12])
+      } else if (type === "2") {
+        enhanceNameList.push(...["恢复", "速度", "HP", "MP", "异抗回合", "异抗抗力"])
+        enhanceValList.push(...[level * 25, level * 5, level * 720, level * 300, Math.ceil(level / 30), '未知'])
+      } else if (type === "3") {
+        enhanceNameList.push(...["异常加强", "加强回合"])
+        enhanceValList.push(...[level * 13, '未知'])
+      }
+      return {
+        nameList: enhanceNameList,
+        valList: enhanceValList
+      }
+    }
+
+  </script>
+</body>
+</html>
