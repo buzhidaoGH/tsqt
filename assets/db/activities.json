@@ -2,23 +2,23 @@
   "activities": [
     {
       "name": "22.10.04~22.10.10",
-      "background": "./assets/img/20221001113159.png",
+      "background": "http://www.dmoe.cc/random.php",
       "url": "http://t.imop.com/html/22/821/52601.htm"
     },
     {
       "name": "上古魔龙",
       "url": "http://t.imop.com/html/22/346/1076/49051.htm",
-      "background": "./assets/img/20221001110748.png"
+      "background": "http://www.dmoe.cc/random.php"
     },
     {
       "name": "藏猫猫",
       "url": "http://t.imop.com/html/22/346/1076/49063.htm",
-      "background": "./assets/img/20221001110929.png"
+      "background": "http://www.dmoe.cc/random.php"
     },
     {
       "name": "节日联盟",
       "url": "http://t.imop.com/html/22/346/1076/49109.htm",
-      "background": "./assets/img/20221001111156.png"
+      "background": "http://www.dmoe.cc/random.php"
     }
   ]
 }
