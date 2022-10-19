@@ -20,5 +20,27 @@
       "url": "http://t.imop.com/html/22/346/1076/49003.htm",
       "background": "http://www.dmoe.cc/random.php?flag=3"
     }
+  ],
+  "activitiesBack": [
+    {
+      "name": "天书-首页",
+      "url": "http://t.imop.com/",
+      "background": "http://www.dmoe.cc/random.php?flag=0"
+    },
+    {
+      "name": "天书-活动",
+      "url": "http://t.imop.com/list/0-1.htm",
+      "background": "http://www.dmoe.cc/random.php?flag=1"
+    },
+    {
+      "name": "天书-资料",
+      "url": "http://www.tianshu.cn/",
+      "background": "http://www.dmoe.cc/random.php?flag=2"
+    },
+    {
+      "name": "天书-论坛",
+      "url": "http://bbs.t.imop.com/",
+      "background": "http://www.dmoe.cc/random.php?flag=3"
+    }
   ]
 }
