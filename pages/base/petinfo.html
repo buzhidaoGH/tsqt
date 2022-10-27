@@ -1,0 +1,80 @@
+<!DOCTYPE html><html lang="zh_CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1"><meta http-equiv="X-UA-Compatible" content="ie=edge"><title>宠物信息</title><style type="text/css">.layui-table-cell{height:auto;line-height:30px}.layui-form-item{margin-bottom:0!important}table{border-right:1px solid #000;border-bottom:1px solid #000;text-align:center}table th{width:120px}table td{border-left:1px solid #000;border-top:1px solid #000;width:120px}</style></head><body><div class="layui-col-xs12"><table id="petTable" lay-filter="petTable"></table><span>PS：未收录炼化类宠物等，如出现图文不符请反馈</span></div><script type="text/html" id="toolBar"><form class="layui-form layui-form-pane">
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="width: 80px;">类型</label>
+        <div class="layui-input-inline" style="width: 80px;text-align: center;text-align-last: center">
+          <select name="petType">
+            <option value="全部">全部</option>
+            <option value="神兽">神兽</option>
+            <option value="野兽">野兽</option>
+            <option value="人型">人型</option>
+            <option value="妖怪">妖怪</option>
+            <option value="精灵">精灵</option>
+          </select>
+        </div>
+        <label class="layui-form-label">宠物名称</label>
+        <div class="layui-input-inline" style="width: 130px">
+          <input type="text" name="petName" class="layui-input" style="padding: 0">
+        </div>
+        <label class="layui-form-label">宠物技能</label>
+        <div class="layui-input-inline" style="width: 110px">
+          <input type="text" name="petSkill" class="layui-input" style="padding: 0">
+        </div>
+        <div style="width: 108px;position: absolute;left: 670px;top: 15px">
+          <button type="submit" lay-submit lay-filter="search"
+                  class="layui-btn layui-btn-sm layui-btn-normal">
+            搜索
+          </button>
+          <button type="reset" lay-submit lay-filter="reset" class="layui-btn layui-btn-sm layui-btn-danger">
+            重置
+          </button>
+        </div>
+      </div>
+    </form></script><script type="text/html" id="petFun"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="petInfo">宠物信息</a>
+
+    <a class="layui-btn layui-btn-xs" lay-event="isBlank">功能待定</a></script><script id="pet_info" type="text/html"><table style="text-align: center" lay-size="lg">
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <td colspan="3">宠物名称</td>
+        <td colspan="3">{{d.name}}</td>
+      </tr>
+      <tr>
+        <td colspan="3">宠物类型</td>
+        <td colspan="3">{{d.type}}</td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="4"><img src="{{d.img}}" alt="无" style="width: 360px;min-height: 360px">
+        </td>
+        <td colspan="1">17悟</td>
+        <td colspan="2">{{d.perfect[0]}}</td>
+      </tr>
+      <tr>
+        <td>18悟</td>
+        <td colspan="2">{{d.perfect[1]}}</td>
+      </tr>
+      <tr>
+        <td>19悟</td>
+        <td colspan="2">{{d.perfect[2]}}</td>
+      </tr>
+      <tr>
+        <td>20悟</td>
+        <td colspan="2">{{d.perfect[3]}}</td>
+      </tr>
+      <tr>
+        <td colspan="6">宠物技能（{{d.skill.length}}）</td>
+      </tr>
+      {{# for(let i=0;i
+      <d.skill.length ;i=i+3){ }}
+      <tr>
+        <td colspan="2">{{ d.skill[i] }}</td>
+        <td colspan="2">{{ d.skill[i+1] }}</td>
+        <td colspan="2">{{ d.skill[i+2] }}</td>
+      </tr>
+      {{#}}}
+    </table></script><script type="text/javascript">let petAll=[];function renderData(e,t){return e.render({elem:"#petTable",toolbar:"#toolBar",defaultToolbar:[],page:{layout:["count","prev","page","next"],groups:3,first:!1,last:!1,limit:5,curr:1},data:t,cols:[[{title:"序号",align:"center",width:70,unresize:!0,templet:function(e){return e.LAY_TABLE_INDEX+1}},{field:"name",title:"名称",align:"center",width:150,unresize:!0},{title:"图片",align:"center",unresize:!0,templet:function(e){return`<img src="${e.img}" alt="无">`}},{field:"type",title:"类型",align:"center",width:70,unresize:!0},{title:"操作",toolbar:"#petFun",align:"center",width:250,unresize:!0}]]})}layui.use(["table","form","layer"],(function(){const e=layui.table,t=layui.form,n=layui.$,l=layui.layer,i=layui.laytpl;let r=l.msg("正在获取数据...",{icon:16,shade:.3,time:0});fetch("./assets/db/pet.json").then(e=>e.json()).then(t=>{petAll=t,renderData(e,petAll),l.close(r)}),t.on("submit(search)",(function({field:{petType:l,petName:i,petSkill:r}}){i=i.replace(/\s*/g,""),r=r.replace(/\s*/g,"");let a=petAll.filter((function(e){return"全部"===l||e.type===l})).filter((function(e){return-1!==e.name.search(i)})).filter((function(e){for(let t of e.skill)if(-1!==t.search(r))return!0;return!1}));return renderData(e,a),n("select[name='petType']").val(l),n("input[name='petName']").val(i),n("input[name='petSkill']").val(r),t.render("select"),!1})),t.on("submit(reset)",()=>{renderData(e,petAll)}),e.on("tool(petTable)",(function({data:e,event:t}){switch(t){case"isBlank":l.msg("功能待定...",{icon:1,time:1500});break;case"petInfo":i(n("#pet_info").html()).render(e,(function(t){l.open({type:0,title:`<div style="font-weight: bold;font-size: 17px">${e.name}信息</div>`,content:t})}))}}))}))</script></body></html>
